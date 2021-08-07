@@ -78,7 +78,7 @@ defmodule Poeticoins.Exchanges.CoinbaseClient do
         # subscription frames
         # send subscription frames to coinbase
         subscription_frames(state.currency_pairs)
-        |> Enum.each(&:gun.ws_send(sta`te.conn, &1))
+        |> Enum.each(&:gun.ws_send(state.conn, &1))
     end
 
     defp subscription_frames(currency_pairs) do
