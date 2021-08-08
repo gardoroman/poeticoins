@@ -1,8 +1,8 @@
 defmodule Poeticoins.Product do
 
     @type t() :: %__MODULE__{
-        exchange_name: exchange_name,
-        currency_pair: currency_pair
+        exchange_name: String.t(),
+        currency_pair: String.t()
     }
     defstruct [:exchange_name, :currency_pair]
     
@@ -13,7 +13,5 @@ defmodule Poeticoins.Product do
             currency_pair: currency_pair
         }
     end
-
-    
 
 end
