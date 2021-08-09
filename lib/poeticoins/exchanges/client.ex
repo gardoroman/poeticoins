@@ -16,6 +16,33 @@ defmodule Poeticoins.Exchanges.Client do
 
     defstruct [:module, :conn, :conn_ref, :currency_pairs]
 
+    defmacro defclient(opts) do
+        exchange_name = Keyword.fetch!(opts, :exchange_name)
+        host = Keyword.fetch!(opts, :host)
+        port = Keyword.fetch!(opts, :port)
+        currency_pairs = Keyword.fetch!(opts, :currency_pairs)
+
+        client_module = __MODULE__
+
+        quote do
+            @behaviour unquote(client_module)
+            import unquote(client_module), only: [validate_required: 2]
+            require Logger
+
+            def available_currency_pairs, do: unquote(currency_pairs)
+            def exchange_name, do: unquote(exchange_name)
+            def server_host, do: unquote(host)
+            def server_port, do: unquote(port)
+
+            def handle_ws_message(msg, state) do
+                Logger.debug("handle_ws_message #{inspect(msg)}")
+                {:noreply, state}
+            end
+
+            defoverridable [handle_ws_message: 2]
+        end
+    end
+
     def start_link(module, currency_pairs, opts \\ []) do
         GenServer.start_link(__MODULE__, {module, currency_pairs}, opts)
     end
@@ -78,7 +105,7 @@ defmodule Poeticoins.Exchanges.Client do
     # handle_info/2
     # Handle response from websocket upgrade
     #-------------------------------------------------------------------------
-    def handle_info({:gun_ws, conn, ref, {:text, msg}=_frame}, %{conn: conn}=client) do
+    def handle_info({:gun_ws, conn, _ref, {:text, msg}=_frame}, %{conn: conn}=client) do
         handle_ws_message(Jason.decode!(msg), client)
     end
 
