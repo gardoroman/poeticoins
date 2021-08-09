@@ -9,7 +9,7 @@ defmodule Poeticoins.Exchanges.BitstampClient do
                      currency_pairs: ["btcusd", "ethusd", "ltcusd", "btceur", "etheur", "ltceur"]
 
     @impl true
-    defp subscription_frames(currency_pairs) do
+    def subscription_frames(currency_pairs) do
         Enum.map(currency_pairs, &subscription_frame/1)
     end
 
@@ -24,7 +24,7 @@ defmodule Poeticoins.Exchanges.BitstampClient do
     end
 
     @impl true
-    defp handle_ws_message(%{"event" => "trade"} = msg, state) do
+    def handle_ws_message(%{"event" => "trade"} = msg, state) do
         msg
         |> message_to_trade()
         |> IO.inspect(label: "bitstamp")
@@ -32,7 +32,7 @@ defmodule Poeticoins.Exchanges.BitstampClient do
         {:noreply, state}
     end
 
-    defp handle_ws_message(msg, state) do
+    def handle_ws_message(msg, state) do
         IO.inspect(msg, label: "Unhandled message")
         {:noreply, state}
     end
@@ -44,7 +44,7 @@ defmodule Poeticoins.Exchanges.BitstampClient do
         with :ok <- validate_required(data, ["amount_str", "price_str", "timestamp"]),
              {:ok, traded_at} <- timestamp_to_datetime(data["timestamp"])
         do   
-            trade = Trade.new(
+            Trade.new(
                 product: Product.new(exchange_name(), currency_pair),
                 price: data["price_str"],
                 volume: data["amount_str"],
