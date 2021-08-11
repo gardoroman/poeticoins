@@ -16,7 +16,7 @@ config :poeticoins, PoeticoinsWeb.Endpoint,
       "node_modules/webpack/bin/webpack.js",
       "--mode",
       "development",
-      "--watch-stdin",
+      # "--watch-stdin",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]
