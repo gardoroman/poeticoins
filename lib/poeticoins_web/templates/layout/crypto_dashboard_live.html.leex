@@ -1,3 +1,17 @@
+<form action="#" phx-submit="add-product">
+    <select name="product_id">
+        <option selected disabled>Add a Crypto Product</option>
+        <%= for product <- Poeticoins.available_products() do %>
+            <option value="<%=to_string(product) %>">    
+                <%= product.exchange_name %> - <%= product.currency_pair %>
+            </option>
+        <% end %>
+    </select>
+    <button type="submit" phx-disable-with="Loading...">Add product</button>
+</form>
+<form action="#" phx-change="filter-products">
+    <input phx-debounce="300" type="text" name="search">
+</form>
 <table>
     <thead>
         <th>Traded At </th>
@@ -8,7 +22,7 @@
     </thead>
     <body>
         <tbody>
-            <%= for product <- @products, trade = @trades[product], not is_nil(trade) do %>
+            <%= for product <- @products, @filter_products.(product), trade = @trades[product] do %>
                 <tr>
                     <td><%= trade.traded_at %></td>
                     <td><%= trade.product.exchange_name %></td>
