@@ -1,12 +1,13 @@
 <form action="#" phx-submit="add-product">
     <select name="product_id">
-        <option selected disabled>Add a Crypto Product</option>
-        <%= for product <- Poeticoins.available_products() do %>
-            <option value="<%=to_string(product) %>">    
-                <%= product.exchange_name %> - <%= product.currency_pair %>
-            </option>
-        <% end %>
+    <option selected disabled>Add a Crypto Product</option>
+    <%= for product <- Poeticoins.available_products() do %>
+        <option value="<%= to_string(product) %>">
+        <%= product.exchange_name %> - <%= product.currency_pair %>
+        </option>
+    <% end %>
     </select>
+
     <button type="submit" phx-disable-with="Loading...">Add product</button>
 </form>
 <form action="#" phx-change="filter-products">
@@ -14,23 +15,22 @@
 </form>
 <table>
     <thead>
-        <th>Traded At </th>
-        <th>Exchange </th>
-        <th>Currency </th>
-        <th>Price </th>
-        <th>Volume </th>
+    <th>Traded at</th>
+    <th>Exchange</th>
+    <th>Currency</th>
+    <th>Price</th>
+    <th>Volume</th>
     </thead>
-    <body>
-        <tbody>
-            <%= for product <- @products, @filter_products.(product), trade = @trades[product] do %>
-                <tr>
-                    <td><%= trade.traded_at %></td>
-                    <td><%= trade.product.exchange_name %></td>
-                    <td><%= trade.product.currency_pair %></td>
-                    <td><%= trade.price %></td>
-                    <td><%= trade.volume %></td>
-                </tr>
-            <%end%>
-        </tbody>
-    </body>
+    <tbody>
+    <%= for product <- @products, @filter_products.(product), trade = @trades[product], not is_nil(trade) do%>
+    <tr>
+        <td><%= trade.traded_at %></td>
+        <td><%= trade.product.exchange_name %></td>
+        <td><%= trade.product.currency_pair %></td>
+        <td><%= trade.price %></td>
+        <td><%= trade.volume %></td>
+    </tr>
+
+    <% end %>
+    </tbody>
 </table>
