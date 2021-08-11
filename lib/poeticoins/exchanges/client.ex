@@ -34,9 +34,9 @@ defmodule Poeticoins.Exchanges.Client do
             def server_host, do: unquote(host)
             def server_port, do: unquote(port)
 
-            def handle_ws_message(msg, state) do
+            def handle_ws_message(msg, client) do
                 Logger.debug("handle_ws_message #{inspect(msg)}")
-                {:noreply, state}
+                {:noreply, client}
             end
 
             defoverridable [handle_ws_message: 2]

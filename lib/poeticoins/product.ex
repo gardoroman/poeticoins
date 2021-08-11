@@ -5,6 +5,12 @@ defmodule Poeticoins.Product do
         currency_pair: String.t()
     }
     defstruct [:exchange_name, :currency_pair]
+
+    defimpl String.Chars do
+      def to_string(product) do
+          product.exchange_name <> ":" <> product.currency_pair
+      end
+    end
     
     @spec new(String.t(), String.t()) :: t()
     def new(exchange_name, currency_pair) do
